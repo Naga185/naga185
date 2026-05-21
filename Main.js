@@ -1,13 +1,17 @@
 define('scripts/Main', [], function () {
     'use strict';
 
-    var MyWidget = {
-        // Your logic code here
+    var MainWidget = {
+        init: function () {
+            // Use 'var' ONLY. No 'let' or 'const' allowed by the cloud compiler
+            var userName = widget.getValue('UserName');
+            var contentDiv = document.getElementById('widget-content');
+            
+            if (contentDiv) {
+                contentDiv.innerHTML = '<h1>Hello World, ' + userName + '!</h1>';
+            }
+        }
     };
 
-    // Example execution
-    var name = widget.getValue('UserName');
-    document.body.innerHTML = '<h1>Hello World, ' + name + '!</h1>';
-
-    return MyWidget;
+    return MainWidget;
 });
