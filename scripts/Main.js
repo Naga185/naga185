@@ -10,24 +10,31 @@ define('scripts/Main', [
 
         init: function () {
 
-            document.getElementById('widget-content').innerHTML =
-                '<h2>Calling 3DX API...</h2>';
+            var div =
+                document.getElementById('widget-content');
+
+            div.innerHTML =
+                '<h2>Calling API...</h2>';
 
             WAFData.authenticatedRequest(
 
-                '/resources/v1/application/CSRF',
+                '/resources/modeler/pno/person',
 
                 {
 
                     method: 'GET',
                     type: 'json',
 
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+
                     onComplete: function (data) {
 
-                        console.log(data);
+                        console.log('SUCCESS:', data);
 
-                        document.getElementById('widget-content').innerHTML =
-                            '<h1>SUCCESS</h1>' +
+                        div.innerHTML =
+                            '<h1 style="color:green;">SUCCESS</h1>' +
                             '<pre>' +
                             JSON.stringify(data, null, 2) +
                             '</pre>';
@@ -35,9 +42,9 @@ define('scripts/Main', [
 
                     onFailure: function (error) {
 
-                        console.error(error);
+                        console.error('FAILED:', error);
 
-                        document.getElementById('widget-content').innerHTML =
+                        div.innerHTML =
                             '<h1 style="color:red;">FAILED</h1>' +
                             '<pre>' +
                             JSON.stringify(error, null, 2) +
