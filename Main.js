@@ -1,11 +1,13 @@
-function executeWidgetCode() {
-	require(["UWA/Drivers/jQuery", "HelloModule/Toto"], function($,totoModule) {
-		var myWidget = {
-            onLoadWidget: function() {
-                widget.body.innerHTML = "<p>Hello, World !</p>" + "<br/>" + totoModule.fctHello("My Name: ") + widget.getPreference("UserName").value;
-            },
-            toto: "test"
-        };
-        widget.addEvent("onLoad", myWidget.onLoadWidget);
-    });
-}
+define('scripts/Main', [], function () {
+    'use strict';
+
+    var MyWidget = {
+        // Your logic code here
+    };
+
+    // Example execution
+    var name = widget.getValue('UserName');
+    document.body.innerHTML = '<h1>Hello World, ' + name + '!</h1>';
+
+    return MyWidget;
+});
