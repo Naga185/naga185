@@ -1,43 +1,28 @@
-define('scripts/Main', ['DS/WAFData/WAFData'], function (WAFData) {
+define('scripts/Main', [], function () {
     'use strict';
 
     var MainWidget = {
         init: function () {
-            // Find the core platform service URL dynamically from the widget setup
-            var platformUrl = widget.getValue('x3dPlatformId') || widget.getValue('3DEXPERIENCE_Platform');
-            
-            // If the platform ID isn't directly exposed, default to the cloud instance origin
-            var passportUrl = 'https://r1132100379178-ap2-ifwe.3dexperience.3ds.com/3DPassport/users/current';
+            var displayName = 'User';
 
-            // Use authenticated platform proxy to request your profile records safely
-            WAFData.authenticatedRequest(passportUrl, {
-                method: 'GET',
-                type: 'json',
-                onComplete: function (response) {
-                    var displayName = 'User';
-                    if (response && response.name) {
-                        displayName = response.name; // Grabs your full display profile name
-                    } else if (response && (response.firstName || response.lastName)) {
-                        displayName = ((response.firstName || '') + ' ' + (response.lastName || '')).trim();
-                    }
-
-                    MainWidget.render(displayName);
-                },
-                onFailure: function (error) {
-                    // Fallback to testing the native frame properties if API is restricted
-                    var fallbackName = 'User';
-                    if (widget.environment && widget.environment.user) {
-                        fallbackName = widget.environment.user.firstName || 'User';
-                    }
-                    MainWidget.render(fallbackName);
+            // Use the standard open UWA widget object storage context
+            if (typeof widget !== 'undefined') {
+                // Look for the user identity stored inside the native widget configuration
+                var userObj = widget.getValue('user') || (widget.environment && widget.environment.user);
+                
+                if (userObj) {
+                    var firstName = userObj.firstName || '';
+                    var lastName = userObj.lastName || '';
+                    displayName = ((firstName + ' ' + lastName).trim() || 'User');
+                } else if (typeof UWA !== 'undefined' && UWA.Security && UWA.Security.currentUser) {
+                    // Fallback to the global Unified Web Application framework security context
+                    displayName = UWA.Security.currentUser.name || 'User';
                 }
-            });
-        },
+            }
 
-        render: function (name) {
             var contentDiv = document.getElementById('widget-content');
             if (contentDiv) {
-                contentDiv.innerHTML = '<h1>Hello World, ' + name + '!</h1>';
+                contentDiv.innerHTML = '<h1>Hello World, ' + displayName + '!</h1>';
             }
         }
     };
