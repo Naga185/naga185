@@ -3,49 +3,37 @@
 
 <head>
 
-    <title>Sample Widget Hello World</title>
+<title>TEST Widget</title>
 
-    <widget:preferences>
-        <widget:preference
-            name="test_user"
-            type="text"
-            label="Test Username"
-            defaultValue="Ganesh_Test_Admin">
-        </widget:preference>
-    </widget:preferences>
+<widget:preferences>
+    <widget:preference
+        name="test_user"
+        type="text"
+        label="Test Username"
+        defaultValue="Ganesh_Test_Admin"/>
+</widget:preferences>
 
-    <script type="text/javascript"
-        src="https://uwa.3dexperience.3ds.com/resources/v1/ui/uwa/js/UWA_W3C.js">
-    </script>
+<script src="https://uwa.3dexperience.3ds.com/resources/v1/ui/uwa/js/UWA_W3C.js"></script>
 
-    <script type="text/javascript">
+<script>
 
-        widget.addEvent('onLoad', function () {
+widget.addEvent('onLoad', function () {
 
-            var baseUrl =
-                widget.getUrl().substring(
-                    0,
-                    widget.getUrl().lastIndexOf('/') + 1
-                );
+    require(['scripts/Main'], function (Main) {
+        Main.init();
+    });
 
-            require.config({
-                baseUrl: baseUrl
-            });
+});
 
-            require(['scripts/Main'], function (Main) {
-                Main.init();
-            });
-        });
-
-    </script>
+</script>
 
 </head>
 
 <body>
 
-    <div id="widget-content">
-        Loading Widget Content...
-    </div>
+<div id="widget-content">
+Loading...
+</div>
 
 </body>
 </html>
