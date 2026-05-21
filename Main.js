@@ -1,9 +1,9 @@
-define('scripts/Main', [], function () {
+// CHANGE THIS: Define as 'Main' instead of 'scripts/Main'
+define('Main', [], function () {
     'use strict';
 
     var MainWidget = {
         init: function () {
-            // Use 'var' ONLY. No 'let' or 'const' allowed by the cloud compiler
             var userName = widget.getValue('UserName');
             var contentDiv = document.getElementById('widget-content');
             
