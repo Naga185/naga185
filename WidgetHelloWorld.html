@@ -16,16 +16,16 @@
     <link rel="stylesheet" type="text/css" href="styles/Main.css" />
 
     <script type="text/javascript">
+        // <![CDATA[
         /*global widget, require*/
         
-        // Inside 3DEXPERIENCE, the platform will automatically fire the 'onLoad' event
         widget.addEvent('onLoad', function() {
-            // Use standard platform 'require' to load your Main JS file safely
+            // Using require ensuring your script paths load properly via the cloud proxy
             require(['scripts/Main'], function(Main) {
-                // Initialize your custom code logic here if needed
-                console.log("Widget successfully initialized via AMD.");
+                Main.init();
             });
         });
+        // ]]>
     </script>
 </head>
 
