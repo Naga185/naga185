@@ -1,30 +1,38 @@
 define('scripts/Main', [], function () {
+
     'use strict';
 
     var MainWidget = {
+
         init: function () {
 
-            var displayMarkup = '';
+            var html = '';
 
-            if (typeof widget !== 'undefined') {
+            try {
 
-                // Correct way
-                var testUser = widget.getValue('test_user') || 'Preference Not Found';
+                html += '<p>Widget Object Exists</p>';
 
-                displayMarkup += '<p><strong>Successfully Fetched Preference Data:</strong></p>';
-                displayMarkup += '<h2>' + testUser + '</h2>';
+                var pref = widget.getValue('test_user');
 
-            } else {
+                console.log("Preference:", pref);
 
-                displayMarkup = '<p style="color:red;">Widget frame context missing.</p>';
+                html += '<p><strong>Preference Value:</strong></p>';
+                html += '<h2>' + pref + '</h2>';
+
+                if (!pref) {
+                    html += '<p style="color:red;">Preference is NULL/EMPTY</p>';
+                }
+
+            } catch (e) {
+
+                html += '<p style="color:red;">ERROR:</p>';
+                html += '<pre>' + e + '</pre>';
+
+                console.error(e);
             }
 
-            var contentDiv = document.getElementById('widget-content');
-
-            if (contentDiv) {
-                contentDiv.innerHTML =
-                    '<h1>Testing Complete!</h1>' + displayMarkup;
-            }
+            document.getElementById('widget-content').innerHTML =
+                '<h1>Testing Complete!</h1>' + html;
         }
     };
 
