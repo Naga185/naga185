@@ -1,13 +1,14 @@
-define('Main', ['DS/PlatformAPI/PlatformAPI'], function (PlatformAPI) {
+define('scripts/Main', ['UWA/Class/User'], function (UWAUser) {
     'use strict';
 
     var MainWidget = {
         init: function () {
-            // Get the automatically logged-in user profile object
-            var user = PlatformAPI.getUser();
+            // Fetch the user data using the standard open platform class
+            var firstName = UWAUser.get('firstName') || '';
+            var lastName = UWAUser.get('lastName') || '';
             
-            // You can use user.firstName, user.lastName, or user.login
-            var userName = user ? (user.firstName + ' ' + user.lastName) : 'Guest';
+            // Combine them to get your full name
+            var userName = (firstName || lastName) ? (firstName + ' ' + lastName) : 'User';
             
             var contentDiv = document.getElementById('widget-content');
             if (contentDiv) {
