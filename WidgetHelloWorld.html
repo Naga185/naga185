@@ -3,39 +3,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
 
 <head>
-	<title>PLM Coach Sample Widget Hello World</title>
+    <title>PLM Coach Sample Widget Hello World</title>
 
-    <meta name="author" content="PLMCoach" />
-	<meta name="description" content="PLMCoach Sample Widget Hello World" />
-	<meta name="apiVersion" content="1.3" />
-	<meta name="debugMode" content="true" />
-	<meta name="strictMode" content="false" />
-
-    <script type="text/javascript" src="http://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
-	<script type="text/javascript" src="../DSISLibraries/jquery/jquery-3.2.1.min.js"></script>
+    <meta name="author" content="CM9" />
+    <meta name="description" content="CM9 Widget Hello World" />
+    <meta name="apiVersion" content="1.3" />
 
     <widget:preferences>
-		<widget:preference type="text" name="UserName" label="User Name" defaultValue="Toto"/>
-	</widget:preferences>
+        <widget:preference type="text" name="UserName" label="User Name" defaultValue="Toto"/>
+    </widget:preferences>
 
     <link rel="stylesheet" type="text/css" href="styles/Main.css" />
-	<script type="text/javascript" src="scripts/Main.js"></script>
 
     <script type="text/javascript">
-    function widgetLoading() {
-        if (widget) {
-            executeWidgetCode();
-        } else {
-            console.warn("Defered widget Loading");
-            setTimeout(widgetLoading, 100); //Wait for widget object to be added correctly
-        }
-    }
-    widgetLoading();
-</script>
+        /*global widget, require*/
+        
+        // Inside 3DEXPERIENCE, the platform will automatically fire the 'onLoad' event
+        widget.addEvent('onLoad', function() {
+            // Use standard platform 'require' to load your Main JS file safely
+            require(['scripts/Main'], function(Main) {
+                // Initialize your custom code logic here if needed
+                console.log("Widget successfully initialized via AMD.");
+            });
+        });
+    </script>
 </head>
 
 <body>
-	<p>Loading Widget ...</p>
+    <div id="widget-content">Loading Widget Content...</div>
 </body>
 
 </html>
