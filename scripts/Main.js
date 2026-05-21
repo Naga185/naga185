@@ -3,26 +3,21 @@ define('scripts/Main', [], function () {
 
     var MainWidget = {
         init: function () {
-            var preferenceMarkup = '<ul>';
+            var displayMarkup = '';
 
             if (typeof widget !== 'undefined') {
-                // Read all active preferences assigned to this widget container
-                var prefs = widget.getPreferences();
+                // Fetch the default value we defined in index.html
+                var testUser = widget.getPreference('test_user') || 'Preference Not Found';
                 
-                for (var key in prefs) {
-                    if (prefs.hasOwnProperty(key)) {
-                        var val = widget.getPreference(key) || 'none';
-                        preferenceMarkup += '<li><strong>' + key + ':</strong> ' + val + '</li>';
-                    }
-                }
-                preferenceMarkup += '</ul>';
+                displayMarkup += '<p><strong>Successfully Fetched Preference Data:</strong></p>';
+                displayMarkup += '<h2>' + testUser + '</h2>';
             } else {
-                preferenceMarkup = '<p style="color:red;">Widget frame context missing.</p>';
+                displayMarkup = '<p style="color:red;">Widget frame context missing.</p>';
             }
 
             var contentDiv = document.getElementById('widget-content');
             if (contentDiv) {
-                contentDiv.innerHTML = '<h1>Widget Preferences Found:</h1>' + preferenceMarkup;
+                contentDiv.innerHTML = '<h1>Testing Complete!</h1>' + displayMarkup;
             }
         }
     };
