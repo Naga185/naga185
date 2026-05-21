@@ -1,14 +1,17 @@
-define('scripts/Main', ['UWA/Class/User'], function (UWAUser) {
+define('scripts/Main', [], function () {
     'use strict';
 
     var MainWidget = {
         init: function () {
-            // Fetch the user data using the standard open platform class
-            var firstName = UWAUser.get('firstName') || '';
-            var lastName = UWAUser.get('lastName') || '';
-            
-            // Combine them to get your full name
-            var userName = (firstName || lastName) ? (firstName + ' ' + lastName) : 'User';
+            // Read the user object straight from the platform widget context
+            var userObj = widget.getValue('user');
+            var userName = 'User';
+
+            if (userObj) {
+                var firstName = userObj.firstName || '';
+                var lastName = userObj.lastName || '';
+                userName = (firstName + ' ' + lastName).trim() || 'User';
+            }
             
             var contentDiv = document.getElementById('widget-content');
             if (contentDiv) {
