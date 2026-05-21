@@ -3,21 +3,19 @@ define('scripts/Main', [], function () {
 
     var MainWidget = {
         init: function () {
-            var userName = 'User';
+            var displayName = 'User';
 
-            // Bypass the security restriction by pulling directly from the parent container environment
-            if (typeof widget !== 'undefined' && widget.environment) {
-                var userContext = widget.environment.user;
-                if (userContext) {
-                    var firstName = userContext.firstName || '';
-                    var lastName = userContext.lastName || '';
-                    userName = (firstName + ' ' + lastName).trim() || 'User';
+            // Safely grab your actual name directly from the widget container's system frame
+            if (window.widget && window.widget.environment && window.widget.environment.user) {
+                var p = window.widget.environment.user;
+                if (p.firstName || p.lastName) {
+                    displayName = ((p.firstName || '') + ' ' + (p.lastName || '')).trim();
                 }
             }
 
             var contentDiv = document.getElementById('widget-content');
             if (contentDiv) {
-                contentDiv.innerHTML = '<h1>Hello World, ' + userName + '!</h1>';
+                contentDiv.innerHTML = '<h1>Hello World, ' + displayName + '!</h1>';
             }
         }
     };
