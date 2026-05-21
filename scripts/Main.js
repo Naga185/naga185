@@ -3,23 +3,26 @@ define('scripts/Main', [], function () {
 
     var MainWidget = {
         init: function () {
-            var diagnosticInfo = '';
+            var preferenceMarkup = '<ul>';
 
             if (typeof widget !== 'undefined') {
-                // Fetch basic platform identifiers that don't violate security policies
-                var platformId = widget.getValue('x3dPlatformId') || 'Not Found';
-                var lang = widget.lang || 'Not Detected';
+                // Read all active preferences assigned to this widget container
+                var prefs = widget.getPreferences();
                 
-                diagnosticInfo += '<p><strong>Platform ID:</strong> ' + platformId + '</p>';
-                diagnosticInfo += '<p><strong>Language:</strong> ' + lang + '</p>';
-                diagnosticInfo += '<p><strong>Widget ID:</strong> ' + (widget.id || 'N/A') + '</p>';
+                for (var key in prefs) {
+                    if (prefs.hasOwnProperty(key)) {
+                        var val = widget.getPreference(key) || 'none';
+                        preferenceMarkup += '<li><strong>' + key + ':</strong> ' + val + '</li>';
+                    }
+                }
+                preferenceMarkup += '</ul>';
             } else {
-                diagnosticInfo = '<p style="color:red;">Widget object is not accessible!</p>';
+                preferenceMarkup = '<p style="color:red;">Widget frame context missing.</p>';
             }
 
             var contentDiv = document.getElementById('widget-content');
             if (contentDiv) {
-                contentDiv.innerHTML = '<h1>Diagnostic Test Success!</h1>' + diagnosticInfo;
+                contentDiv.innerHTML = '<h1>Widget Preferences Found:</h1>' + preferenceMarkup;
             }
         }
     };
