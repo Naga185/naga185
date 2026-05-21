@@ -20,7 +20,15 @@
         /*global widget, require*/
         
         widget.addEvent('onLoad', function() {
-            // Using require ensuring your script paths load properly via the cloud proxy
+            // 1. Get the base URL path where your widget file lives on GitHub Pages
+            var baseUrl = widget.getUrl().substring(0, widget.getUrl().lastIndexOf('/') + 1);
+
+            // 2. Configure RequireJS so it knows where to look for 'scripts/Main'
+            require.config({
+                baseUrl: baseUrl
+            });
+
+            // 3. Now load your script safely through the platform proxy
             require(['scripts/Main'], function(Main) {
                 Main.init();
             });
