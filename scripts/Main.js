@@ -1,40 +1,50 @@
-define('scripts/Main', [], function () {
+define('scripts/Main', [
+
+    'DS/WAFData/WAFData'
+
+], function (WAFData) {
 
     'use strict';
 
-    var MainWidget = {
+    return {
 
         init: function () {
 
-            var html = '';
-
-            try {
-
-                html += '<p>Widget Object Exists</p>';
-
-                var pref = widget.getValue('test_user');
-
-                console.log("Preference:", pref);
-
-                html += '<p><strong>Preference Value:</strong></p>';
-                html += '<h2>' + pref + '</h2>';
-
-                if (!pref) {
-                    html += '<p style="color:red;">Preference is NULL/EMPTY</p>';
-                }
-
-            } catch (e) {
-
-                html += '<p style="color:red;">ERROR:</p>';
-                html += '<pre>' + e + '</pre>';
-
-                console.error(e);
-            }
-
             document.getElementById('widget-content').innerHTML =
-                '<h1>Testing Complete!</h1>' + html;
+                '<h2>Calling 3DX API...</h2>';
+
+            WAFData.authenticatedRequest(
+
+                '/resources/v1/application/CSRF',
+
+                {
+
+                    method: 'GET',
+                    type: 'json',
+
+                    onComplete: function (data) {
+
+                        console.log(data);
+
+                        document.getElementById('widget-content').innerHTML =
+                            '<h1>SUCCESS</h1>' +
+                            '<pre>' +
+                            JSON.stringify(data, null, 2) +
+                            '</pre>';
+                    },
+
+                    onFailure: function (error) {
+
+                        console.error(error);
+
+                        document.getElementById('widget-content').innerHTML =
+                            '<h1 style="color:red;">FAILED</h1>' +
+                            '<pre>' +
+                            JSON.stringify(error, null, 2) +
+                            '</pre>';
+                    }
+                }
+            );
         }
     };
-
-    return MainWidget;
 });
