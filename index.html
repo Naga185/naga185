@@ -8,17 +8,19 @@
 <script src="https://uwa.3dexperience.3ds.com/resources/v1/ui/uwa/js/UWA_W3C.js"></script>
 
 <script>
-
 widget.addEvent('onLoad', function () {
 
+    console.log("Widget loaded");
+
     require(['scripts/Main'], function (Main) {
+        console.log("Main required");
         Main.init();
+    }, function (err) {
+        console.error("Require error:", err);
     });
 
 });
-
 </script>
-
 </head>
 
 <body>
