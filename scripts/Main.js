@@ -1,7 +1,5 @@
 define('scripts/Main', [
-
     'DS/WAFData/WAFData'
-
 ], function (WAFData) {
 
     'use strict';
@@ -10,18 +8,15 @@ define('scripts/Main', [
 
         init: function () {
 
-            var div =
-                document.getElementById('widget-content');
+            console.log("Main init called");
 
-            div.innerHTML =
-                '<h2>Calling API...</h2>';
+            var div = document.getElementById('widget-content');
+
+            div.innerHTML = '<h2>Calling API...</h2>';
 
             WAFData.authenticatedRequest(
-
-                '/resources/modeler/pno/person',
-
+                '/resources/v1/modeler/pno/person',   // ✅ FIXED
                 {
-
                     method: 'GET',
                     type: 'json',
 
