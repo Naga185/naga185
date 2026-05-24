@@ -1,33 +1,47 @@
-<!DOCTYPE html>
-<html>
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
 
-<head>
+    <head>
+        <title>CPE EMED - Sample Widget</title>
 
-<title>3DX Test Widget</title>
+        <meta name="author" content="Dassault Systèmes Euromed CPE team" />
+        <meta name="description" content="" />
+        <meta name="apiVersion" content="1.0" />
+        <meta name="debugMode" content="true" />
+        <meta name="strictMode" content="false" />
 
-<script src="https://uwa.3dexperience.3ds.com/resources/v1/ui/uwa/js/UWA_W3C.js"></script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script>
-widget.addEvent('onLoad', function () {
+        <!-- Application Preferences -->
+        <widget:preferences>          
+        </widget:preferences>
+        
+        <script src="./scripts/main.js"></script>
 
-    console.log("Widget loaded");
+    </head>
 
-    require(['scripts/Main'], function (Main) {
-        console.log("Main required");
-        Main.init();
-    }, function (err) {
-        console.error("Require error:", err);
-    });
+    <body >
+        <h1>Welcome to the 3DEXPERIENCE WEB SERVICES CPE EMED Workshop</h1>
+        <h2>Simple example of using WAFData to call a 3DEXPERIENCE Web Services to get the security contexts available to the user.</h2>
+        <ol>
+            <li>Open the widget menu - note that right after loading there are no Preferences available.</li>
+            <li>Click on the Refresh menu entry</li>
+            <li>Now check that the Preferences is now available on the widget menu with a list of security contexts.</li>
+        </ol>
+    </body>
 
-});
-</script>
-</head>
-
-<body>
-
-<div id="widget-content">
-Loading...
-</div>
-
-</body>
+	<!-- Widget Initialization -->
+	<script type="text/javascript">
+        function widgetLoading() {
+            if (widget) {
+                executeInitWidget(widget);
+			} else {
+				setTimeout(widgetLoading, 100); //Wait for widget object to be added correctly
+			}
+        }
+		widgetLoading();
+    </script>
 </html>
