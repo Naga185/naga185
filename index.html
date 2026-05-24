@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
 
     <head>
-        <title>CPE EMED - Sample Widget</title>
+        <title>3DX Widget CPE EMED Workshop - Proxified Request</title>
 
         <meta name="author" content="Dassault Systèmes Euromed CPE team" />
         <meta name="description" content="" />
@@ -16,27 +16,25 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Application Preferences -->
-        <widget:preferences>          
+        <widget:preferences>
+            <widget:preference type="text" name="myTextPreference" label="my text preference" defaultValue='Good to see you!' />
         </widget:preferences>
         
         <script src="./scripts/main.js"></script>
 
     </head>
 
-    <body >
+    <body>
         <h1>Welcome to the 3DEXPERIENCE WEB SERVICES CPE EMED Workshop</h1>
-        <h2>Simple example of using WAFData to call a 3DEXPERIENCE Web Services to get the security contexts available to the user.</h2>
-        <ol>
-            <li>Open the widget menu - note that right after loading there are no Preferences available.</li>
-            <li>Click on the Refresh menu entry</li>
-            <li>Now check that the Preferences is now available on the widget menu with a list of security contexts.</li>
-        </ol>
+        <P></P>
+        <h2 id="activityId"></h2>
     </body>
 
-	<!-- Widget Initialization -->
+	<!-- Widget/VueJS Initialization -->
 	<script type="text/javascript">
         function widgetLoading() {
-            if (widget) {
+            if (widget) 
+            {
                 executeInitWidget(widget);
 			} else {
 				setTimeout(widgetLoading, 100); //Wait for widget object to be added correctly
