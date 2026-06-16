@@ -1,94 +1,110 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>3DX GitHub Pages Proof Test</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3DX Runtime Debug Test</title>
 
-    <meta name="author" content="Nagaraj Test Widget" />
-    <meta name="description" content="Runtime check for 3DX + GitHub Pages" />
-    <meta name="apiVersion" content="1.0" />
-    <meta name="debugMode" content="true" />
-    <meta name="strictMode" content="false" />
-
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h2 {
-            margin-bottom: 12px;
-        }
-
-        #status {
-            padding: 10px;
-            border: 1px solid #ccc;
-            background: #f7f7f7;
-            white-space: pre-wrap;
-        }
-    </style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 16px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    #status {
+      padding: 10px;
+      border: 1px solid #bbb;
+      background: #f7f7f7;
+      font-weight: bold;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+    #log {
+      border: 1px solid #ddd;
+      background: #fafafa;
+      padding: 10px;
+      min-height: 180px;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      overflow: auto;
+    }
+  </style>
 </head>
-
 <body>
-    <h2>3DX GitHub Pages Proof Test</h2>
-    <div id="status">Page loaded. Checking runtime...</div>
+  <h2>3DX GitHub Pages Proof Test</h2>
+  <div id="status">Starting script...</div>
+  <div id="log"></div>
 
-    <script type="text/javascript">
-        function show(msg) {
-            var el = document.getElementById("status");
-            if (el) {
-                el.textContent = msg;
+  <script>
+    (function () {
+      var statusEl = document.getElementById("status");
+      var logEl = document.getElementById("log");
+
+      function setStatus(msg) {
+        statusEl.textContent = msg;
+        console.log("[STATUS]", msg);
+      }
+
+      function log(msg) {
+        logEl.textContent += msg + "\n";
+        console.log("[LOG]", msg);
+      }
+
+      setStatus("Script started. Running diagnostics...");
+      log("Page loaded at: " + new Date().toISOString());
+
+      var count = 0;
+
+      var timer = setInterval(function () {
+        count++;
+
+        log("Heartbeat #" + count);
+        log("typeof window.widget = " + typeof window.widget);
+        log("typeof window.require = " + typeof window.require);
+        log("typeof window.requirejs = " + typeof window.requirejs);
+
+        if (typeof window.widget !== "undefined" && window.widget) {
+          clearInterval(timer);
+          setStatus("Classic widget runtime detected.");
+
+          if (typeof window.require === "function") {
+            try {
+              window.require(
+                ["DS/WAFData/WAFData"],
+                function (WAFData) {
+                  log("WAFData loaded successfully.");
+                  log("typeof WAFData = " + typeof WAFData);
+                  setStatus("Classic widget runtime + WAFData available. Ready for 3DX API test.");
+                },
+                function (err) {
+                  log("Require callback error: " + JSON.stringify(err));
+                  setStatus("Widget runtime exists, but WAFData module failed to load.");
+                }
+              );
+            } catch (e) {
+              log("Exception during require/WAFData load: " + e.message);
+              setStatus("Widget runtime exists, but require/WAFData threw an exception.");
             }
-            console.log(msg);
+          } else {
+            setStatus("Classic widget runtime detected, but require() is not available.");
+          }
+
+          return;
         }
 
-        // Safe stub so page never crashes if widget runtime appears
-        function executeInitWidget(w) {
-            show(
-                "Classic widget runtime detected.\n" +
-                "typeof widget = " + typeof window.widget + "\n" +
-                "typeof require = " + typeof window.require + "\n" +
-                "typeof requirejs = " + typeof window.requirejs + "\n\n" +
-                "Next step: now we can test WAFData / 3DX API."
-            );
+        if (count >= 10) {
+          clearInterval(timer);
+          setStatus("No classic widget runtime detected after 10 seconds.");
+          log("Conclusion: page is hosted correctly, but classic widget object is not being injected.");
+          log("Likely causes: app registration type, cached page, or non-classic app container.");
         }
-
-        function widgetLoading(attempt) {
-            attempt = attempt || 0;
-
-            var info =
-                "window.widget = " + typeof window.widget + "\n" +
-                "window.require = " + typeof window.require + "\n" +
-                "window.requirejs = " + typeof window.requirejs;
-
-            if (typeof window.widget !== "undefined" && window.widget) {
-                executeInitWidget(window.widget);
-                return;
-            }
-
-            if (attempt > 20) {
-                show(
-                    "No classic widget runtime detected.\n\n" +
-                    info + "\n\n" +
-                    "This means:\n" +
-                    "1. GitHub Pages is serving the page correctly.\n" +
-                    "2. The page is NOT getting the classic widget object.\n" +
-                    "3. The current issue is runtime/app registration, not hosting."
-                );
-                return;
-            }
-
-            setTimeout(function () {
-                widgetLoading(attempt + 1);
-            }, 300);
-        }
-
-        widgetLoading();
-    </script>
+      }, 1000);
+    })();
+  </script>
 </body>
 </html>
+``
