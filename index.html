@@ -15,22 +15,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <script src="./scripts/main.js"></script>
-</head>
-
-<body>
-    <h2>3DX GitHub Pages Proof Test</h2>
-    <div id="status">Waiting for widget runtime...</div>
-</body>
-
-<script type="text/javascript">
-    function widgetLoading() {
-        if (typeof widget !== "undefined" && widget) {
-            executeInitWidget(widget);
-        } else {
-            setTimeout(widgetLoading, 100);
-        }
+    <script type="text/javascript">
+    function show(msg) {
+        var el = document.getElementById("status");
+        if (el) el.textContent = msg;
+        console.log(msg);
     }
+
+    function widgetLoading(attempt) {
+        attempt = attempt || 0;
+
+        var info = [
+            "window.widget=" + typeof window.widget,
+            "window.require=" + typeof window.require,
+            "window.requirejs=" + typeof window.requirejs
+        ].join(" | ");
+
+        if (typeof window.widget !== "undefined" && window.widget) {
+            show("Classic widget runtime detected. " + info);
+            executeInitWidget(window.widget);
+            return;
+        }
+
+        if (attempt > 20) {
+            show("No classic widget runtime detected. " + info);
+            return;
+        }
+
+        setTimeout(function () {
+            widgetLoading(attempt + 1);
+        }, 300);
+    }
+
     widgetLoading();
 </script>
 </html>
