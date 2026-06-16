@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
 <head>
     <title>3DX GitHub Pages Proof Test</title>
 
-    <meta name="author" content="Test Widget" />
-    <meta name="description" content="Proof test for 3DX API access from GitHub Pages" />
+    <meta name="author" content="Nagaraj Test Widget" />
+    <meta name="description" content="Runtime check for 3DX + GitHub Pages" />
     <meta name="apiVersion" content="1.0" />
     <meta name="debugMode" content="true" />
     <meta name="strictMode" content="false" />
@@ -15,38 +15,80 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 12px;
+        }
+
+        #status {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f7f7f7;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>3DX GitHub Pages Proof Test</h2>
+    <div id="status">Page loaded. Checking runtime...</div>
+
     <script type="text/javascript">
-    function show(msg) {
-        var el = document.getElementById("status");
-        if (el) el.textContent = msg;
-        console.log(msg);
-    }
-
-    function widgetLoading(attempt) {
-        attempt = attempt || 0;
-
-        var info = [
-            "window.widget=" + typeof window.widget,
-            "window.require=" + typeof window.require,
-            "window.requirejs=" + typeof window.requirejs
-        ].join(" | ");
-
-        if (typeof window.widget !== "undefined" && window.widget) {
-            show("Classic widget runtime detected. " + info);
-            executeInitWidget(window.widget);
-            return;
+        function show(msg) {
+            var el = document.getElementById("status");
+            if (el) {
+                el.textContent = msg;
+            }
+            console.log(msg);
         }
 
-        if (attempt > 20) {
-            show("No classic widget runtime detected. " + info);
-            return;
+        // Safe stub so page never crashes if widget runtime appears
+        function executeInitWidget(w) {
+            show(
+                "Classic widget runtime detected.\n" +
+                "typeof widget = " + typeof window.widget + "\n" +
+                "typeof require = " + typeof window.require + "\n" +
+                "typeof requirejs = " + typeof window.requirejs + "\n\n" +
+                "Next step: now we can test WAFData / 3DX API."
+            );
         }
 
-        setTimeout(function () {
-            widgetLoading(attempt + 1);
-        }, 300);
-    }
+        function widgetLoading(attempt) {
+            attempt = attempt || 0;
 
-    widgetLoading();
-</script>
+            var info =
+                "window.widget = " + typeof window.widget + "\n" +
+                "window.require = " + typeof window.require + "\n" +
+                "window.requirejs = " + typeof window.requirejs;
+
+            if (typeof window.widget !== "undefined" && window.widget) {
+                executeInitWidget(window.widget);
+                return;
+            }
+
+            if (attempt > 20) {
+                show(
+                    "No classic widget runtime detected.\n\n" +
+                    info + "\n\n" +
+                    "This means:\n" +
+                    "1. GitHub Pages is serving the page correctly.\n" +
+                    "2. The page is NOT getting the classic widget object.\n" +
+                    "3. The current issue is runtime/app registration, not hosting."
+                );
+                return;
+            }
+
+            setTimeout(function () {
+                widgetLoading(attempt + 1);
+            }, 300);
+        }
+
+        widgetLoading();
+    </script>
+</body>
 </html>
