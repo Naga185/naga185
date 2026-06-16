@@ -1,60 +1,67 @@
-  //docs https://media.3ds.com/support/documentation/developer/Cloud/en/DSDocNS.htm?show=../generated/js/_index/WebappsUtils.htm#function
-  //CPE Euromed - bootstrap
-  function executeInitWidget(w) {
+function executeInitWidget(w) {
+    require(["DS/WAFData/WAFData"], function (WAFData) {
 
-    require(["DS/WAFData/WAFData"], 
-      function (WAFData) 
-      {
         var myWidget = {
-          
-          endEdit: function () {
-            console.log("3DX Workshop Widget endEdit called");
-          },
-          onEdit: function () {
-            console.log("3DX Workshop Widget onEdit called");
-          },
-          onKeyboardAction: function (key) {
-            console.log("3DX Workshop Widget onKeyboardAction called with key '" + key + "'");
-          },
-          onLoad: function () {
-            myWidget.invokeBoredActivity();
-            console.log("3DX Workshop Widget OnLoad called");
-          },
-          onRefresh: function () {
-            myWidget.invokeBoredActivity();
-            console.log("3DX Workshop Widget OnRefresh called");
-          },
-          onResize: function () {
-            console.log("3DX Workshop Widget onResize called");
-          },
-          onViewChange: function (event) {
-            console.log("3DX Workshop Widget onViewChange called with event.type ='" + event.type + "'");
-          },
-          onSearch: function (searchQuery) {
-            console.log("3DX Workshop Widget onSearch called with searchQuery ='" + searchQuery + "'");
-          },
-          onResetSearch: function () {
-            console.log("3DX Workshop Widget onResetSearch called.");
-          },
-          invokeBoredActivity: function() {
-                WAFData.proxifiedRequest("https://www.boredapi.com/api/activity", { type: "json", 
-                onComplete : data => {
-                  let recommendedActivity = data.activity;
-                  document.getElementById("activityId").textContent = 
-                    "Feeling bored? You could " + recommendedActivity.charAt(0).toLowerCase() + recommendedActivity.substring(1) + "!";
-                } })
+            init: function () {
+                console.log("Widget initialized");
+                this.test3DXConnection();
+            },
+
+            test3DXConnection: function () {
+                var statusEl = document.getElementById("status");
+
+                // Trial SecurityContext from your screenshot:
+                // Responsibility.Organization.CollaborativeSpace
+                // If this exact value fails, the internal role token may differ.
+                var securityContext = "Leader.Company Name.CMTest";
+
+                var url = "/3dspace/resources/v1/modeler/dseng/dseng:EngItem/search" +
+                          "?$top=1" +
+                          "&$mask=dskern:Mask.Default";
+
+                statusEl.textContent = "Calling 3DX search...";
+
+                WAFData.authenticatedRequest(url, {
+                    method: "GET",
+                    type: "json",
+                    headers: {
+                        "SecurityContext": securityContext
+                    },
+
+                    onComplete: function (data) {
+                        console.log("3DX response success:", data);
+
+                        var count = 0;
+                        var firstText = "";
+
+                        if (data && typeof data.totalItems !== "undefined") {
+                            count = data.totalItems;
+                        }
+
+                        if (data && data.member && data.member.length > 0) {
+                            firstText = data.member[0].name || data.member[0].title || data.member[0].id || "";
+                        }
+
+                        statusEl.textContent =
+                            "SUCCESS: 3DX call worked. GitHub Pages is NOT the blocker. " +
+                            "Count = " + count + (firstText ? " | First item = " + firstText : "");
+                    },
+
+                    onFailure: function (error) {
+                        console.error("3DX response failed:", error);
+                        statusEl.textContent =
+                            "FAILED: request failed. Check browser console and network tab.";
+                    }
+                });
             }
         };
-        
-        w.addEvent("endEdit", myWidget.endEdit);
-        w.addEvent("onEdit", myWidget.onEdit);
-        w.addEvent("onKeyboardAction", myWidget.onKeyboardAction);
-        w.addEvent("onLoad", myWidget.onLoad);
-        w.addEvent("onRefresh", myWidget.onRefresh);
-        w.addEvent("onResize", myWidget.onResize);
-        w.addEvent("onViewChange", myWidget.onViewChange);
 
-        w.addEvent("onSearch", myWidget.onSearch);
-        w.addEvent("onResetSearch", myWidget.onResetSearch);
-  }) 
+        w.addEvent("onLoad", function () {
+            myWidget.init();
+        });
+
+        w.addEvent("onRefresh", function () {
+            myWidget.test3DXConnection();
+        });
+    });
 }
